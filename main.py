@@ -8,11 +8,11 @@ def main(companies_ids: list[str], db_name, tables_names) -> None:
     create_tables(tables_names, db_name.lower(), params=config())
     fill_tables(tables_names, db_name.lower(), company_ids=companies_ids, params=config())
     db = DBManager(db_name.lower(), config())
-    #db.get_companies_and_vacancies_count()
-    #db.get_all_vacancies()
-    #db.get_avg_salary()
-    #db.get_vacancies_with_higher_salary()
-    #db.get_vacancies_with_keyword('python')
+    db.get_companies_and_vacancies_count()
+    db.get_all_vacancies()
+    db.get_avg_salary()
+    db.get_vacancies_with_higher_salary()
+    db.get_vacancies_with_keyword()
     del db
 
 
