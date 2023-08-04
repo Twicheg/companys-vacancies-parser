@@ -9,7 +9,7 @@ def create_db(database_name: str, *, params: dict) -> None:
     con.autocommit = True
     cur = con.cursor()
 
-    cur.execute("CASCADE DROP DATABASE %s" % database_name)
+    cur.execute("DROP DATABASE %s" % database_name)
     cur.execute("CREATE DATABASE %s" % database_name)
 
     cur.close()

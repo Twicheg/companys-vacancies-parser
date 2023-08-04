@@ -4,7 +4,7 @@ from utils.config import config
 
 
 def main(companies_ids: list[str], db_name: str, tables_names: list[str]) -> None:
-    # create_db(db_name, params=config())
+    create_db(db_name, params=config())
     create_tables(tables_names, db_name.lower(), params=config())
     fill_tables(tables_names, db_name.lower(), company_ids=companies_ids, params=config())
     db = DBManager(db_name.lower(), config())
