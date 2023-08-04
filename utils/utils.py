@@ -1,4 +1,5 @@
-import psycopg2, requests
+import psycopg2
+import requests
 
 
 def create_db(database_name: str, *, params: dict) -> None:
@@ -6,14 +7,14 @@ def create_db(database_name: str, *, params: dict) -> None:
     con.autocommit = True
     cur = con.cursor()
 
-    # cur.execute("DROP DATABASE %s CASCADE" % (database_name))
+    cur.execute("CASCADE DROP DATABASE %s" % database_name)
     cur.execute("CREATE DATABASE %s" % database_name)
 
     cur.close()
     con.close()
 
 
-def create_tables(table_names: list, db_name: str, *, params: dict) -> None:
+def create_tables(table_names: list[str], db_name: str, *, params: dict) -> None:
     try:
         with psycopg2.connect(dbname=db_name, **params) as con:
             with con.cursor() as cur:
@@ -33,7 +34,8 @@ def create_tables(table_names: list, db_name: str, *, params: dict) -> None:
                             "vacation_name varchar(255),"
                             "salary_from int,"
                             "salary_to int,"
-                            "salary_currency varchar(4),"
+                            "salary_currency char(4),"
+                            "vacation_url varchar(255),"
                             "requirement text,"
                             "responsibility text"
                             ")" % (table_names[1].lower(), table_names[0].lower()))
@@ -67,11 +69,12 @@ def fill_tables(table_names: list[str], db_name: str, *, company_ids: list[str],
                                  response.json().get('name'),
                                  site,
                                  description))
-                    for dict_ in requests.get(f"https://api.hh.ru/vacancies?employer_id={vacancy_id}").json()['items']:
+                    for dict_ in requests.get(f"https://api.hh.ru/vacancies?employer_id={vacancy_id}",
+                                              params={'per_page': 100}).json()['items']:
                         if dict_.get('salary') is not None:
                             cur.execute("insert into %s (vacation_id,company_id,vacation_name,salary_from,"
-                                        "salary_to,salary_currency,requirement,responsibility)"
-                                        "values (%i,%i,'%s',%s,%s,'%s','%s','%s')" % (
+                                        "salary_to,salary_currency,vacation_url,requirement,responsibility)"
+                                        "values (%i,%i,'%s',%s,%s,'%s','%s','%s','%s')" % (
                                             table_names[1].lower(),
                                             int(dict_.get('id')),
                                             int(dict_['employer'].get('id')),
@@ -81,12 +84,13 @@ def fill_tables(table_names: list[str], db_name: str, *, company_ids: list[str],
                                             dict_['salary'].get('to') if dict_['salary'].get(
                                                 'to') is not None else 'null',
                                             dict_['salary'].get('currency'),
+                                            dict_['alternate_url'],
                                             dict_['snippet'].get('requirement'),
                                             dict_['snippet'].get('responsibility')))
                         else:
                             cur.execute("insert into %s (vacation_id,company_id,vacation_name,salary_from,"
-                                        "salary_to,salary_currency,requirement,responsibility)"
-                                        "values (%i,%i,'%s',%s,%s,%s,'%s','%s')" % (
+                                        "salary_to,salary_currency,vacation_url,requirement,responsibility)"
+                                        "values (%i,%i,'%s',%s,%s,'%s','%s','%s','%s')" % (
                                             table_names[1].lower(),
                                             int(dict_.get('id')),
                                             int(dict_['employer'].get('id')),
@@ -94,8 +98,9 @@ def fill_tables(table_names: list[str], db_name: str, *, company_ids: list[str],
                                             'null',
                                             'null',
                                             'null',
+                                            dict_['alternate_url'],
                                             dict_['snippet'].get('requirement'),
-                                            dict_['snippet'].get('responsibility', 'null')))
+                                            dict_['snippet'].get('responsibility')))
 
     except Exception as e:
         cur.close()
