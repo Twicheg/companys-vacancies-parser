@@ -9,6 +9,8 @@
 список названия таблиц
 
 ### создан файл database.ini с параметрами подключения к БД
+пример содержания файла database.ini: \
+`[postgresql]`\
 `host=localhost` \
 `user=postgres` \
 `password=****`\
