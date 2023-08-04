@@ -55,7 +55,7 @@ def create_tables(table_names: list[str], db_name: str, *, params: dict) -> None
 def fill_tables(table_names: list[str], db_name: str, *, company_ids: list[str], params: dict) -> None:
     """Функция заполнения таблиц с использованием API hh.ru
     fill_tables([tables_name:str],data_base_name:str,
-    keyword compane_ids=[list[str]], keyword params=[dict]"""
+    keyword compane_ids=[list[str]], keyword params=[dict])"""
     try:
         with psycopg2.connect(dbname=db_name, **params) as con:
             with con.cursor() as cur:

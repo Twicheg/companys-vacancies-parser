@@ -4,11 +4,12 @@ import psycopg2
 class DBManager:
     """Класс работы с базой данных
     __init__(self, dbname, params)"""
-    def __init__(self, dbname, params):
+
+    def __init__(self, dbname: str, params: dict) -> None:
         self.conn = psycopg2.connect(dbname=dbname, **params)
         self.cur = self.conn.cursor()
 
-    def get_companies_and_vacancies_count(self):
+    def get_companies_and_vacancies_count(self) -> list[tuple]:
         """Метод обращения к ДБ ,
          get_companies_and_vacancies_count(self)
          return [list[tuple]] tuple (компаний ,кол-во вакансий у компаний)"""
@@ -17,7 +18,7 @@ class DBManager:
                          'group by company_name;')
         return self.cur.fetchall()
 
-    def get_all_vacancies(self):
+    def get_all_vacancies(self) -> list[tuple]:
         """Метод обращения к ДБ  ,
         get_all_vacancies(self) ,
         return [list[tuple]] tuple(список всех вакансий , названия компании,
@@ -28,7 +29,7 @@ class DBManager:
             ' join companies using(company_id);')
         return self.cur.fetchall()
 
-    def get_avg_salary(self):
+    def get_avg_salary(self) -> list[tuple]:
         """Метод возвращает среднюю зарплату по вакансиям
         get_avg_salary(self),
         return [list[tuple]] tuple:(вакансия,средняя зарплата)"""
@@ -48,7 +49,7 @@ class DBManager:
                 avg_list.append((v, int((sf + st) / 2)))
         return avg_list
 
-    def get_vacancies_with_higher_salary(self):
+    def get_vacancies_with_higher_salary(self) -> list:
         """Метод возвращает список ваканский с зарплатой выше средней
         get_vacancies_with_higher_salary(self)
         return [list] """
@@ -60,7 +61,7 @@ class DBManager:
             list_vacancies_with_higher_salary.append(i[0])
         return list_vacancies_with_higher_salary
 
-    def get_vacancies_with_keyword(self, def_word='python'):
+    def get_vacancies_with_keyword(self, def_word='python') -> list:
         """ Метод возвращает список ваканский , искомые по ключевому слову
         get_vacancies_with_keyword(self, ключ.слово)
          return [list]"""
