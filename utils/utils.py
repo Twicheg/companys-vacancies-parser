@@ -110,9 +110,9 @@ def fill_tables(table_names: list[str], db_name: str, *, company_ids: list[str],
                                                 dict_['snippet'].get('requirement'),
                                                 dict_['snippet'].get('responsibility')))
 
-    # except Exception as e:
-    #     cur.close()
-    #     con.close()
-    #     print('Error: ', e)
+    except Exception as e:
+        cur.close()
+        con.close()
+        print('Error: ', e)
     finally:
         con.close()
