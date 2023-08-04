@@ -9,10 +9,10 @@
 список названия таблиц
 
 ### создан файл database.ini с параметрами подключения к БД
-`host=localhost
-user=postgres
-password=****
-port=5432`
+`host=localhost` \
+`user=postgres` \
+`password=****`\
+`port=5432`
 
 ### из utils.py импортировано 3 функции:
 * `create_db` для создания ДБ
