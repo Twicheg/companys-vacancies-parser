@@ -1,4 +1,4 @@
-# Курсовая работа №5
+# company's-vacancies-Parser
 
 ### создана функция main() модуля main.py
 
